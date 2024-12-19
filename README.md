@@ -1,4 +1,4 @@
-# Timesheet Reminder Email Automation
+# Timesheet Reminder Email Automation using TINES
 
 ## Overview
 This automation helps GVSU Parking Services maintain consistent timesheet submissions by automatically sending reminder emails on a biweekly schedule. Using a single event transform, it combines time checking, scheduling logic, and email formatting.
