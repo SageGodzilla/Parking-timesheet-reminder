@@ -47,10 +47,10 @@
       "origin_story_identifier": "cloud:14fe6345f70f34c7d582c9425dfa4916:85795c38cbe8534a8d347d5b70bd4294",
       "options": {
         "recipients": [
-          "konijetm@mail.gvsu.edu"
+          ".....@gmail.com"
         ],
-        "reply_to": "konijetm@mail.gvsu.edu",
-        "sender_name": "Mani Sai Sathwik Konijeti",
+        "reply_to": "......@gmail.com",
+        "sender_name": "........",
         "subject": "<<check_biweekly_timesheet_reminder.output.subject>>",
         "body": "<<reminder_message.output.body>>",
         "advanced_html": true
