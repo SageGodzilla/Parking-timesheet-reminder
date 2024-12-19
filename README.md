@@ -22,7 +22,7 @@ is_biweekly_friday == true
 ```html
 <html>
 <body style='font-family: Arial, sans-serif; line-height: 1.6;'>
-    <p>Dear Parking Services Team,</p>
+    <p>Dear Team,</p>
     
     <p>This is a friendly reminder to submit your hours.</p>
     
