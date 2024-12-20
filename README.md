@@ -1,21 +1,26 @@
 # Timesheet Reminder Email Automation using TINES
 
 ## Overview
-This automation helps maintain consistent timesheet submissions by automatically sending reminder emails on a biweekly schedule. Using a single event transform, it combines time checking, scheduling logic, and email formatting.
+This automation helps maintain consistent timesheet submissions by automatically sending reminder emails on a biweekly schedule during morning hours on Fridays. Using event transform with timezone handling, it ensures accurate delivery timing.
 
 ## Technical Implementation
 
 ### Event Transform Conditions
-```javascript
-// Time Window Check
-current_hour >= 8 && current_hour < 9
+```python
+from datetime import datetime, timezone
+import pytz
 
-// Friday Check
-current_day == "Friday"
+# Time Window Check (Morning Hours)
+eastern = pytz.timezone('America/Detroit')
+now = datetime.now(eastern)
+current_hour = now.hour
+current_day = now.weekday()
 
-// Biweekly Pattern Check
-// If Week 1, next email Week 3
-is_biweekly_friday == true
+# Morning Hours Check (0-11 AM)
+is_morning = 0 <= current_hour <= 11
+
+# Friday Check
+is_friday = current_day == 4
 ```
 
 ### Email Template Structure
@@ -30,122 +35,81 @@ is_biweekly_friday == true
     <ul style='margin-left: 20px;'>
         <li>Submit hours through Workday</li>
         <li>Deadline is 4 PM</li>
-        <li>Hours should be accurate</li>
-        <li>Failure of hours submission will delay in payroll processing</li>
+        <li>Record your hours accurately</li>
+        <li>Failure of submission will delay in payroll processing</li>
     </ul>
     
-    <p style='margin-top: 20px;'>Best regards,<br>
-    .........SERVICES </p>
+    <p style='margin-top: 20px;'>Best,<br>
+     SERVICES</p>
 </body>
 </html>
 ```
 
 ### Transform Output Types
 1. When conditions match:
-   ```json
-   {
-     "subject": "Timesheet Submission Reminder",
-     "body": "HTML_FORMATTED_EMAIL",
-     "send_time": "CURRENT_TIMESTAMP"
-   }
-   ```
+```json
+{
+    "subject": "Timesheet Submission Reminder",
+    "body": "HTML_FORMATTED_EMAIL"
+}
+```
 
 2. When conditions don't match:
-   ```json
-   {
-     "message": "Not time to send reminder yet"
-   }
-   ```
+```python
+f"Current hour is {current_hour} - Should be between 0 and 11 for morning hours"
+# or
+"Not Friday - no reminder needed"
+```
 
 ## Testing Procedures
 
 ### Pre-Deployment Tests
 1. Time Window Test:
-   - Test before 8:00 AM (should not send)
-   - Test between 8:00-9:00 AM (should send)
-   - Test after 9:00 AM (should not send)
-
+   * Test in morning hours (should send)
+   * Test in afternoon hours (should not send)
 2. Day Check Test:
-   - Test on Friday (should process)
-   - Test on other days (should return "not time" message)
-
-3. Biweekly Pattern Test:
-   - Week 1: Initial send
-   - Week 2: No send
-   - Week 3: Should send
-   - Week 4: No send
+   * Test on Friday (should process)
+   * Test on other days (should return "Not Friday" message)
 
 ### Email Format Testing
 1. HTML Rendering:
-   - Check font application
-   - Verify list formatting
-   - Confirm line spacing
-   - Test across email clients
-
+   * Check font application
+   * Verify list formatting
+   * Confirm line spacing
 2. Content Verification:
-   - Subject line presence
-   - All bullet points included
-   - Signature formatting
-   - No HTML tag visibility
+   * Subject line presence
+   * All bullet points included
+   * Signature formatting
 
 ## Automation Schedule
-- Initial Trigger: Starts on first Friday run
-- Subsequent Runs: 
-  - If started Week 1 Friday → Next email Week 3 Friday
-  - Continues every other Friday indefinitely
-- Time Window: 8:00 AM - 9:00 AM
+* Runs during morning hours (before noon)
+* Executes on Fridays
+* Uses Eastern timezone (America/Detroit)
 
-## Implementation Files
-- `timesheet_reminder.json`: 
-  ```json
-  {
-    "version": "1.0",
-    "transform_type": "event",
-    "conditions": {
-      "time_check": true,
-      "day_check": true,
-      "biweekly_check": true
-    },
-    "email_template": "HTML_CONTENT",
-    "output_format": "JSON"
-  }
-  ```
-
-## Troubleshooting Guide
-1. Email Not Sending:
-   - Verify current time is within 8:00-9:00 AM window
-   - Confirm it's a Friday
-   - Check biweekly pattern alignment
-
-2. Format Issues:
-   - Verify HTML syntax is intact
-   - Check for missing closing tags
-   - Confirm style attributes
-
-3. Schedule Problems:
-   - Review initial run date
-   - Verify biweekly calculation
-   - Check timezone settings
+## Technical Notes
+* Uses pytz library for timezone handling
+* Implements 24-hour format for time checking
+* Handles local time conversion automatically
 
 ## Maintenance
-The automation is self-maintaining but may need updates for:
-- Email content modifications
-- Time window adjustments
-- HTML template updates
-- Biweekly pattern changes
+The automation may need updates for:
+* Email content modifications
+* Time window adjustments
+* Timezone changes
+* HTML template updates
 
 ## Version History
-- 1.0: Initial implementation
-- Current Version: 1.0
-  - Features: Time check, biweekly scheduling, HTML email
+* 1.0: Initial implementation with basic time check
+* 1.1: Added timezone support
+* Current Version: 1.1
+   * Features: Timezone awareness, morning hours check, HTML email
 
-## Future Enhancements (Optional)
-1. Add confirmation logging
-2. Implement error reporting
-3. Add email delivery tracking
-4. Create backup send window
-
-## Support
-For issues or modifications, contact:
-- Automation Team
-- IT Support
+## Troubleshooting Guide
+1. Time Issues:
+   * Verify timezone settings
+   * Check server time vs local time
+   * Confirm morning hours detection
+2. Format Issues:
+   * Verify HTML syntax
+   * Check email rendering
+   * Confirm content formatting
