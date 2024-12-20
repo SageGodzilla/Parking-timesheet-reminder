@@ -48,9 +48,9 @@
       "origin_story_identifier": "cloud:14fe6345f70f34c7d582c9425dfa4916:85795c38cbe8534a8d347d5b70bd4294",
       "options": {
         "recipients": [
-          "nallurih@mail.gvsu.edu"
+          "......@gmail.com"
         ],
-        "sender_name": "GVSU PARKING SERVICES",
+        "sender_name": "........",
         "subject": "<<check_biweekly_timesheet_reminder.output.subject>>",
         "body": "<<check_biweekly_timesheet_reminder.output.body>>",
         "advanced_html": true
