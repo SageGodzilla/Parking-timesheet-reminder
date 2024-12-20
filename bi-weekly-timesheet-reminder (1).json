@@ -1,0 +1,111 @@
+{
+  "schema_version": 25,
+  "standard_lib_version": 66,
+  "action_runtime_version": 18,
+  "name": "Bi-weekly timesheet reminder",
+  "description": null,
+  "guid": "85795c38cbe8534a8d347d5b70bd4294",
+  "slug": "bi_weekly_timesheet_reminder",
+  "agents": [
+    {
+      "type": "Agents::EventTransformationAgent",
+      "name": "Check biweekly timesheet reminder",
+      "disabled": false,
+      "description": null,
+      "guid": "bcbdf452c3f9a5540697b5334878689e",
+      "origin_story_identifier": "cloud:14fe6345f70f34c7d582c9425dfa4916:85795c38cbe8534a8d347d5b70bd4294",
+      "options": {
+        "mode": "automatic",
+        "input": "=",
+        "guidance": "from datetime import datetime, timezone\nimport pytz\n\ndef main(input):\n    # Set timezone to Eastern Time\n    eastern = pytz.timezone('America/Detroit')\n    now = datetime.now(eastern)\n    current_hour = now.hour\n    current_day = now.weekday()\n    \n    print(f\"Local time: {now}\")\n    print(f\"Current hour: {current_hour}\")\n    print(f\"Current day: {current_day}\")\n    \n    # Check if it's Friday\n    if current_day == 4:\n        # Check if it's morning hours (0-11)\n        if 0 <= current_hour <= 11:\n            return {\n                'subject': 'Timesheet Submission Reminder',\n                'body': '''<html>\n<body style='font-family: Arial, sans-serif; line-height: 1.6;'>\n    <p>Dear Parking Services Team,</p>\n    \n    <p>This is a friendly reminder to submit your hours.</p>\n    \n    <p>Important details:</p>\n    <ul style='margin-left: 20px;'>\n        <li>Submit your hours through Workday</li>\n        <li>Deadline : 4 PM</li>\n        <li> Record your hours accurately</li>\n        <li>Failure of submission will delay in payroll processing</li>\n    </ul>\n    \n    <p style='margin-top: 20px;'>Best,<br>\n    GVSU PARKING SERVICES</p>\n</body>\n</html>'''\n            }\n        else:\n            return f\"Current hour is {current_hour} - Should be between 0 and 11 for morning hours\"\n    else:\n        return \"Not Friday - no reminder needed\"",
+        "language": "Python",
+        "script": "from datetime import datetime\nimport pytz\n\ndef main(input):\n    # Set timezone to Eastern Time\n    eastern = pytz.timezone('America/Detroit')\n    now = datetime.now(eastern)\n    current_hour = now.hour\n    current_day = now.weekday()\n    \n    # Check if it's Friday\n    if current_day == 4:\n        # Check if it's morning hours (0-11)\n        if 0 <= current_hour <= 11:\n            return {\n                'subject': 'Timesheet Submission Reminder',\n                'body': '''<html>\n<body style='font-family: Arial, sans-serif; line-height: 1.6;'>\n    <p>Dear Parking Services Team,</p>\n    \n    <p>This is a friendly reminder to submit your hours.</p>\n    \n    <p>Important details:</p>\n    <ul style='margin-left: 20px;'>\n        <li>Submit your hours through Workday</li>\n        <li>Deadline : 4 PM</li>\n        <li> Record your hours accurately</li>\n        <li>Failure of submission will delay in payroll processing</li>\n    </ul>\n    \n    <p style='margin-top: 20px;'>Best,<br>\n    GVSU PARKING SERVICES</p>\n</body>\n</html>'''\n            }\n        else:\n            return f\"Current hour is {current_hour} - Should be between 0 and 11 for morning hours\"\n    else:\n        return \"Not Friday - no reminder needed\"",
+        "requirements": "pytz==2024.2"
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": false,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null
+    },
+    {
+      "type": "Agents::EmailAgent",
+      "name": "Send timesheet reminder email",
+      "disabled": false,
+      "description": null,
+      "guid": "15d270fa65af6247f510bd7755cdd74c",
+      "origin_story_identifier": "cloud:14fe6345f70f34c7d582c9425dfa4916:85795c38cbe8534a8d347d5b70bd4294",
+      "options": {
+        "recipients": [
+          "nallurih@mail.gvsu.edu"
+        ],
+        "sender_name": "GVSU PARKING SERVICES",
+        "subject": "<<check_biweekly_timesheet_reminder.output.subject>>",
+        "body": "<<check_biweekly_timesheet_reminder.output.body>>",
+        "advanced_html": true
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": false,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null
+    }
+  ],
+  "diagram_notes": [],
+  "links": [
+    {
+      "source": 0,
+      "receiver": 1
+    }
+  ],
+  "diagram_layout": "{\"bcbdf452c3f9a5540697b5334878689e\":[150,-45],\"15d270fa65af6247f510bd7755cdd74c\":[150,60]}",
+  "send_to_story_enabled": false,
+  "entry_agent_guid": null,
+  "exit_agent_guids": [],
+  "exit_agent_guid": null,
+  "api_entry_action_guids": [],
+  "api_exit_action_guids": [],
+  "keep_events_for": 86400,
+  "reporting_status": true,
+  "send_to_story_access": null,
+  "story_library_metadata": {},
+  "parent_only_send_to_story": false,
+  "monitor_failures": false,
+  "send_to_stories": [],
+  "synchronous_webhooks_enabled": false,
+  "send_to_story_access_source": 0,
+  "send_to_story_skill_use_requires_confirmation": true,
+  "pages": [],
+  "tags": [],
+  "time_saved_unit": "minutes",
+  "time_saved_value": 0,
+  "origin_story_identifier": "cloud:14fe6345f70f34c7d582c9425dfa4916:85795c38cbe8534a8d347d5b70bd4294",
+  "integration_product": null,
+  "integration_vendor": null,
+  "llm_product_instructions": "",
+  "exported_at": "2024-12-20T15:29:09Z",
+  "icon": ":magnet:",
+  "integrations": []
+}
